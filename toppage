@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KARTE検証用デモストア（テスト環境）</title>
+    
+    <!-- ▼▼▼ ここにKARTEの基本計測タグを貼り付けます ▼▼▼ -->
+    <script>
+        // KARTE管理画面から取得した基本タグ（スニペット）をここに配置してください
+    </script>
+    <!-- ▲▲▲ ここまで ▲▲▲ -->
+
+    <style>
+        /* 全体のリセットと基本設定 */
+        body { margin: 0; padding: 0; font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; background-color: #f4f5f7; color: #333; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        
+        /* ヘッダー */
+        header { background-color: #fff; padding: 20px; border-bottom: 2px solid #ddd; display: flex; align-items: center; justify-content: space-between; }
+        header h1 { margin: 0; font-size: 24px; }
+        .test-badge { background-color: #e60012; color: #fff; padding: 5px 10px; font-size: 12px; font-weight: bold; border-radius: 4px; }
+
+        /* レイアウト */
+        .layout-wrapper { display: flex; gap: 30px; margin-top: 20px; flex-wrap: wrap; }
+        .main-content { flex: 1; min-width: 600px; }
+        .sidebar { width: 300px; }
+
+        /* セクション共通 */
+        section { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        section h2 { margin-top: 0; font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+
+        /* 広告バナー（ダミー） */
+        .banner { display: flex; align-items: center; justify-content: center; font-weight: bold; color: #666; border: 2px dashed #bbb; background-color: #eef1f5; text-align: center; margin-bottom: 20px; }
+        .banner-hero { width: 100%; height: 150px; background-color: #ffe8e8; border-color: #ffb3b3; margin-top: 20px; }
+        .banner-square { width: 100%; height: 250px; background-color: #e8f4ff; border-color: #b3d9ff; }
+        .banner-skyscraper { width: 100%; height: 500px; background-color: #e8ffe8; border-color: #b3ffb3; }
+
+        /* テキスト専用エリア（お知らせ） */
+        .news-list { list-style: none; padding: 0; margin: 0; }
+        .news-list li { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 14px; }
+        .news-list li:last-child { border-bottom: none; }
+        .news-date { color: #888; margin-right: 15px; }
+
+        /* 購入エリア */
+        .product-grid { display: flex; gap: 20px; }
+        .product-card { border: 1px solid #eee; padding: 15px; border-radius: 6px; width: 48%; text-align: center; }
+        .product-image-dummy { width: 100%; height: 150px; background-color: #fafafa; border: 1px solid #ddd; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: #aaa; }
+        .price { color: #b12704; font-size: 20px; font-weight: bold; margin: 10px 0; }
+        .btn { padding: 12px; cursor: pointer; border: none; border-radius: 4px; font-size: 14px; width: 100%; font-weight: bold; box-sizing: border-box; margin-bottom: 10px; }
+        .btn-cart { background-color: #ffd814; color: #111; }
+        .btn-cart:hover { background-color: #f7ca00; }
+        .btn-buy { background-color: #ffa41c; color: #111; }
+        .btn-buy:hover { background-color: #fa8900; }
+
+        /* フッター */
+        footer { text-align: center; padding: 20px; color: #777; font-size: 12px; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>デモストア</h1>
+        <span class="test-badge">※KARTE検証用テストページ</span>
+    </header>
+
+    <div class="container">
+        
+        <!-- 広告バナーエリア1（横長・ヒーローバナー） -->
+        <div class="banner banner-hero">
+            広告バナーA<br>（横長キャンペーントップ: 100% × 150px）
+        </div>
+
+        <div class="layout-wrapper">
+            
+            <!-- 左側：メインコンテンツ -->
+            <div class="main-content">
+                
+                <!-- 文字だけのエリア（お知らせ） -->
+                <section class="text-area">
+                    <h2>最新のお知らせ (テキストエリア)</h2>
+                    <ul class="news-list">
+                        <li><span class="news-date">202X.10.01</span>サイトをリニューアルしました。現在テスト環境として稼働中です。</li>
+                        <li><span class="news-date">202X.09.28</span>KARTEの各種イベント（閲覧、カート追加、購入）の検証が可能です。</li>
+                        <li><span class="news-date">202X.09.15</span>秋の新作コレクションについてのプレスリリースを配信しました。</li>
+                    </ul>
+                </section>
+
+                <!-- 購入できるエリア -->
+                <section class="ecommerce-area">
+                    <h2>おすすめ商品 (購入テストエリア)</h2>
+                    <div class="product-grid">
+                        
+                        <!-- 商品1 -->
+                        <div class="product-card">
+                            <div class="product-image-dummy">商品画像</div>
+                            <h3 style="font-size: 16px; margin: 0;">KARTEテスト用 ロゴTシャツ</h3>
+                            <p style="font-size: 12px; color: #666; margin: 5px 0;">ID: item_001</p>
+                            <p class="price">¥3,000</p>
+                            <button id="btn-cart-1" class="btn btn-cart">カートに入れる</button>
+                            <button id="btn-buy-1" class="btn btn-buy">すぐに購入する</button>
+                        </div>
+
+                        <!-- 商品2 -->
+                        <div class="product-card">
+                            <div class="product-image-dummy">商品画像</div>
+                            <h3 style="font-size: 16px; margin: 0;">KARTEテスト用 トートバッグ</h3>
+                            <p style="font-size: 12px; color: #666; margin: 5px 0;">ID: item_002</p>
+                            <p class="price">¥1,500</p>
+                            <button id="btn-cart-2" class="btn btn-cart">カートに入れる</button>
+                            <button id="btn-buy-2" class="btn btn-buy">すぐに購入する</button>
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- 右側：サイドバー（広告枠） -->
+            <div class="sidebar">
+                
+                <!-- 広告バナーエリア2（正方形） -->
+                <div class="banner banner-square">
+                    広告バナーB<br>（レクタングル: 300px × 250px）
+                </div>
+
+                <!-- 広告バナーエリア3（縦長） -->
+                <div class="banner banner-skyscraper">
+                    広告バナーC<br>（スカイスクレイパー: 300px × 500px）<br><br>※KARTEのポップアップテスト等に<br>かぶらないか確認する用の縦長エリア
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        &copy; 202X KARTE Verification Dummy Site. All rights reserved.
+    </footer>
+
+    <script>
+        // --- KARTEイベント発火用のダミーJS ---
+
+        // 商品1のイベント
+        document.getElementById('btn-cart-1').addEventListener('click', function() {
+            alert('【商品1】カートに追加しました。\n※ここで cart イベントが発火します。');
+            /* KARTE実装例
+            tracker.track("cart", { status: true, items: [{ item_id: "item_001", name: "KARTEテスト用 ロゴTシャツ", price: 3000, quantity: 1 }] });
+            */
+        });
+
+        document.getElementById('btn-buy-1').addEventListener('click', function() {
+            alert('【商品1】購入が完了しました。\n※ここで buy イベントが発火します。');
+            /* KARTE実装例
+            tracker.track("buy", { transaction_id: "trx_" + Math.floor(Math.random()*10000), revenue: 3000, items: [{ item_id: "item_001", name: "KARTEテスト用 ロゴTシャツ", price: 3000, quantity: 1 }] });
+            */
+        });
+
+        // 商品2のイベント
+        document.getElementById('btn-cart-2').addEventListener('click', function() {
+            alert('【商品2】カートに追加しました。\n※ここで cart イベントが発火します。');
+        });
+
+        document.getElementById('btn-buy-2').addEventListener('click', function() {
+            alert('【商品2】購入が完了しました。\n※ここで buy イベントが発火します。');
+        });
+    </script>
+
+</body>
+</html>
