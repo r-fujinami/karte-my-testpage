@@ -161,8 +161,23 @@
         });
 
         document.getElementById('btn-buy-2').addEventListener('click', function() {
-            alert('【商品2】購入が完了しました。\n※ここで buy イベントが発火します。');
+    alert('【商品2】購入が完了しました。\n※ここで purchase_btn_2 イベントが発火します。');
+    
+   　　 // KARTEへの送信処理
+    try {
+        krt("send", "purchase_btn_2", {
+            "item_id": 2, // ※文字列の "item_002" としたい場合は "" で囲んでください
+            "name": "KARTEテスト用 トートバッグ",
+            "price": 1500
         });
+    } catch (e) {
+        if ("krt" in window) {
+            krt("send", "_error", { message: e.message });
+        } else {
+            console.warn("tracker was not loaded");
+        }
+    }
+});
     </script>
 
 </body>
