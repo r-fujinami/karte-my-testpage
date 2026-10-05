@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>購入完了 - KARTE検証用デモストア</title>
 
+<!-- GA4検証用：user_id を dataLayer に積む（GTMより前に読み込むこと） -->
+<script src="ga4-user.js"></script>
+
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -13,8 +16,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-PQPZ5QKH');</script>
 <!-- End Google Tag Manager -->
 
-
-  
     <style>
         /* 全体のリセットと基本設定（前回と同じ） */
         body { margin: 0; padding: 0; font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; background-color: #f4f5f7; color: #333; }
@@ -82,6 +83,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <p><strong>注文番号：</strong> <span id="display-order-id"></span></p>
                         <p><strong>決済方法：</strong> クレジットカード（ダミー）</p>
                         <p><strong>合計金額：</strong> ¥3,000</p>
+                        <p><strong>user_id：</strong> <span id="display-user-id" style="font-family: Menlo, Consolas, monospace;"></span></p>
                     </div>
 
                     <!-- トップページ(index.html)へ戻るリンク -->
@@ -118,6 +120,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         // ランダムな注文番号を生成して画面に表示
         const mockOrderId = "ORD-" + Math.floor(Math.random() * 100000000);
         document.getElementById('display-order-id').textContent = mockOrderId;
+
+        // GA4検証用：現在のテストユーザーを表示（未ログインならゲスト）
+        const currentUser = window.GA4TestUser ? window.GA4TestUser.current() : null;
+        document.getElementById('display-user-id').textContent = currentUser ? currentUser.user_id : 'ゲスト（未ログイン）';
 
         /*
         ========================================================
