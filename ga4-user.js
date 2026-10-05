@@ -1,4 +1,4 @@
-*
+ /*
  * GA4検証用：テストユーザー管理（GTMへの user_id 連携）
  * ※必ず GTM スニペットより「前」に同期読み込みすること
  *   <script src="ga4-user.js"></script>
