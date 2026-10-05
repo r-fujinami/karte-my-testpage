@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KARTE検証用デモストア（テスト環境）</title>
 
+<!-- GA4検証用：user_id を dataLayer に積む（GTMより前に読み込むこと） -->
+<script src="ga4-user.js"></script>
+
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -13,9 +16,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-PQPZ5QKH');</script>
 <!-- End Google Tag Manager -->
 
-
-    
-    
     <style>
         /* 全体のリセットと基本設定 */
         body { margin: 0; padding: 0; font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; background-color: #f4f5f7; color: #333; }
@@ -58,6 +58,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         .btn-buy { background-color: #ffa41c; color: #111; }
         .btn-buy:hover { background-color: #fa8900; }
 
+        /* GA4検証パネル */
+        .ga4-panel { border: 2px solid #4285f4; }
+        .ga4-panel h2 { border-bottom-color: #d2e3fc; }
+        .ga4-status { display: grid; grid-template-columns: 130px 1fr; gap: 6px 10px; font-size: 14px; margin-bottom: 16px; }
+        .ga4-status dt { color: #666; }
+        .ga4-status dd { margin: 0; font-family: Menlo, Consolas, monospace; word-break: break-all; }
+        .ga4-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; }
+        .ga4-badge.in { background: #e6f4ea; color: #137333; }
+        .ga4-badge.out { background: #f1f3f4; color: #5f6368; }
+        .ga4-users { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+        .ga4-users button, .ga4-actions button, .ga4-custom button { padding: 8px 12px; border: 1px solid #4285f4; background: #fff; color: #1a73e8; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; }
+        .ga4-users button.active { background: #1a73e8; color: #fff; }
+        .ga4-custom { display: flex; gap: 8px; margin-bottom: 10px; }
+        .ga4-custom input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; }
+        .ga4-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .ga4-actions .danger { border-color: #d93025; color: #d93025; }
+        .ga4-note { font-size: 12px; color: #666; margin-top: 12px; line-height: 1.6; }
+
         /* フッター */
         footer { text-align: center; padding: 20px; color: #777; font-size: 12px; margin-top: 40px; }
     </style>
@@ -68,13 +86,36 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-    
     <header>
         <h1>デモストア</h1>
         <span class="test-badge">※KARTE検証用テストページ</span>
     </header>
 
     <div class="container">
+
+        <!-- GA4検証パネル（テストユーザー切り替え） -->
+        <section class="ga4-panel">
+            <h2>GA4検証パネル（テストログイン）</h2>
+            <dl class="ga4-status">
+                <dt>ログイン状態</dt><dd id="ga4-login-status"></dd>
+                <dt>user_id</dt><dd id="ga4-user-id"></dd>
+                <dt>member_rank</dt><dd id="ga4-rank"></dd>
+                <dt>client_id (_ga)</dt><dd id="ga4-client-id"></dd>
+            </dl>
+            <div class="ga4-users" id="ga4-user-buttons"></div>
+            <div class="ga4-custom">
+                <input id="ga4-custom-id" type="text" placeholder="任意の user_id でログイン（例: test_user_999）">
+                <button id="ga4-custom-login">ログイン</button>
+            </div>
+            <div class="ga4-actions">
+                <button id="ga4-logout">ログアウト</button>
+                <button id="ga4-reset" class="danger">client_idをリセット（別ブラウザを再現）</button>
+            </div>
+            <p class="ga4-note">
+                ログイン／ログアウト時に dataLayer へ <code>login</code> / <code>logout</code> イベントを送信し、ページを再読み込みします。<br>
+                再読み込み後の page_view から user_id が付与されます（状態はこのブラウザの localStorage に保存）。
+            </p>
+        </section>
         
         <!-- 広告バナーエリア1（横長・ヒーローバナー） -->
         <div class="banner banner-hero">
@@ -149,6 +190,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </footer>
 
     <script>
+        // --- GA4検証パネルの制御 ---
+        (function () {
+            var T = window.GA4TestUser;
+            var cur = T.current();
+
+            document.getElementById('ga4-login-status').innerHTML = cur
+                ? '<span class="ga4-badge in">ログイン中</span>'
+                : '<span class="ga4-badge out">ゲスト（未ログイン）</span>';
+            document.getElementById('ga4-user-id').textContent = cur ? cur.user_id : '-';
+            document.getElementById('ga4-rank').textContent = cur ? cur.member_rank : '-';
+
+            // _ga Cookie はGTM読み込み後に発行されるので少し待って表示
+            function showCid() { document.getElementById('ga4-client-id').textContent = T.clientId(); }
+            showCid(); setTimeout(showCid, 1500);
+
+            var box = document.getElementById('ga4-user-buttons');
+            Object.keys(T.users).forEach(function (id) {
+                var b = document.createElement('button');
+                b.textContent = id + '（' + T.users[id].member_rank + '）';
+                if (cur && cur.user_id === id) b.className = 'active';
+                b.addEventListener('click', function () { T.login(id); });
+                box.appendChild(b);
+            });
+
+            document.getElementById('ga4-custom-login').addEventListener('click', function () {
+                var v = document.getElementById('ga4-custom-id').value.trim();
+                if (v) T.login(v);
+            });
+            document.getElementById('ga4-logout').addEventListener('click', function () { T.logout(); });
+            document.getElementById('ga4-reset').addEventListener('click', function () {
+                if (confirm('_ga Cookieを削除して新しい client_id で再読み込みします。よろしいですか？')) T.resetClientId();
+            });
+        })();
+
         // --- KARTEイベント発火用のダミーJS ---
 
         // 商品1のイベント
@@ -171,22 +246,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         });
 
         document.getElementById('btn-buy-2').addEventListener('click', function() {
-    
-   　　 // KARTEへの送信処理
-    try {
-        krt("send", "purchase_btn_2", {
-            "item_id": 2, // ※文字列の "item_002" としたい場合は "" で囲んでください
-            "name": "KARTEテスト用 トートバッグ",
-            "price": 1500
+            // KARTEへの送信処理
+            try {
+                krt("send", "purchase_btn_2", {
+                    "item_id": 2, // ※文字列の "item_002" としたい場合は "" で囲んでください
+                    "name": "KARTEテスト用 トートバッグ",
+                    "price": 1500
+                });
+            } catch (e) {
+                if ("krt" in window) {
+                    krt("send", "_error", { message: e.message });
+                } else {
+                    console.warn("tracker was not loaded");
+                }
+            }
         });
-    } catch (e) {
-        if ("krt" in window) {
-            krt("send", "_error", { message: e.message });
-        } else {
-            console.warn("tracker was not loaded");
-        }
-    }
-});
     </script>
 
 </body>
