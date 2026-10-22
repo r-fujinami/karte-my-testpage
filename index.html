@@ -16,47 +16,28 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-PQPZ5QKH');</script>
 <!-- End Google Tag Manager -->
 
+<!-- カート管理・KARTE/GA4イベント送信 -->
+<script src="store.js"></script>
+
+    <link rel="stylesheet" href="style.css">
     <style>
-        /* 全体のリセットと基本設定 */
-        body { margin: 0; padding: 0; font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; background-color: #f4f5f7; color: #333; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        
-        /* ヘッダー */
-        header { background-color: #fff; padding: 20px; border-bottom: 2px solid #ddd; display: flex; align-items: center; justify-content: space-between; }
-        header h1 { margin: 0; font-size: 24px; }
-        .test-badge { background-color: #e60012; color: #fff; padding: 5px 10px; font-size: 12px; font-weight: bold; border-radius: 4px; }
-
-        /* レイアウト */
-        .layout-wrapper { display: flex; gap: 30px; margin-top: 20px; flex-wrap: wrap; }
-        .main-content { flex: 1; min-width: 600px; }
-        .sidebar { width: 300px; }
-
-        /* セクション共通 */
-        section { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        section h2 { margin-top: 0; font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
-
-        /* 広告バナー（ダミー） */
-        .banner { display: flex; align-items: center; justify-content: center; font-weight: bold; color: #666; border: 2px dashed #bbb; background-color: #eef1f5; text-align: center; margin-bottom: 20px; }
-        .banner-hero { width: 100%; height: 150px; background-color: #ffe8e8; border-color: #ffb3b3; margin-top: 20px; }
-        .banner-square { width: 100%; height: 250px; background-color: #e8f4ff; border-color: #b3d9ff; }
-        .banner-skyscraper { width: 100%; height: 500px; background-color: #e8ffe8; border-color: #b3ffb3; }
-
-        /* テキスト専用エリア（お知らせ） */
+        /* お知らせ */
         .news-list { list-style: none; padding: 0; margin: 0; }
         .news-list li { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 14px; }
         .news-list li:last-child { border-bottom: none; }
         .news-date { color: #888; margin-right: 15px; }
 
-        /* 購入エリア */
-        .product-grid { display: flex; gap: 20px; }
-        .product-card { border: 1px solid #eee; padding: 15px; border-radius: 6px; width: 48%; text-align: center; }
-        .product-image-dummy { width: 100%; height: 150px; background-color: #fafafa; border: 1px solid #ddd; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: #aaa; }
-        .price { color: #b12704; font-size: 20px; font-weight: bold; margin: 10px 0; }
-        .btn { padding: 12px; cursor: pointer; border: none; border-radius: 4px; font-size: 14px; width: 100%; font-weight: bold; box-sizing: border-box; margin-bottom: 10px; }
-        .btn-cart { background-color: #ffd814; color: #111; }
-        .btn-cart:hover { background-color: #f7ca00; }
-        .btn-buy { background-color: #ffa41c; color: #111; }
-        .btn-buy:hover { background-color: #fa8900; }
+        /* 商品一覧 */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .product-card { border: 1px solid #eee; padding: 15px; border-radius: 6px; text-align: center; display: flex; flex-direction: column; }
+        .product-card .thumb { width: 100% !important; height: 150px !important; margin-bottom: 15px; font-size: 56px !important; }
+        .product-card h3 { font-size: 15px; margin: 0; }
+        .product-card .pid { font-size: 12px; color: #666; margin: 5px 0; }
+        .price { color: #b12704; font-size: 20px; font-weight: bold; margin: 8px 0; }
+        .price small { font-size: 11px; color: #888; font-weight: normal; }
+        .qty-select { margin: 0 0 10px; font-size: 13px; }
+        .qty-select select { padding: 4px 8px; font-size: 13px; }
+        .product-card .actions { margin-top: auto; }
 
         /* GA4検証パネル */
         .ga4-panel { border: 2px solid #4285f4; }
@@ -75,9 +56,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         .ga4-actions { display: flex; gap: 8px; flex-wrap: wrap; }
         .ga4-actions .danger { border-color: #d93025; color: #d93025; }
         .ga4-note { font-size: 12px; color: #666; margin-top: 12px; line-height: 1.6; }
-
-        /* フッター */
-        footer { text-align: center; padding: 20px; color: #777; font-size: 12px; margin-top: 40px; }
     </style>
 </head>
 <body>
@@ -87,8 +65,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
     <header>
-        <h1>デモストア</h1>
-        <span class="test-badge">※KARTE検証用テストページ</span>
+        <h1><a href="index.html">デモストア</a></h1>
+        <div class="header-right">
+            <span class="test-badge">※KARTE検証用テストページ</span>
+            <a class="cart-link" href="cart.html" id="header-cart">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+                カート <span class="cart-count" data-cart-count style="display:none">0</span>
+            </a>
+        </div>
     </header>
 
     <div class="container">
@@ -140,29 +124,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <!-- 購入できるエリア -->
                 <section class="ecommerce-area">
                     <h2>おすすめ商品 (購入テストエリア)</h2>
-                    <div class="product-grid">
-                        
-                        <!-- 商品1 -->
-                        <div class="product-card">
-                            <div class="product-image-dummy">商品画像</div>
-                            <h3 style="font-size: 16px; margin: 0;">KARTEテスト用 ロゴTシャツ</h3>
-                            <p style="font-size: 12px; color: #666; margin: 5px 0;">ID: item_001</p>
-                            <p class="price">¥3,000</p>
-                            <button id="btn-cart-1" class="btn btn-cart">カートに入れる</button>
-                            <a href="thanks.html"><button id="btn-buy-1" class="btn btn-buy">すぐに購入する</button></a>
-                        </div>
-
-                        <!-- 商品2 -->
-                        <div class="product-card">
-                            <div class="product-image-dummy">商品画像</div>
-                            <h3 style="font-size: 16px; margin: 0;">KARTEテスト用 トートバッグ</h3>
-                            <p style="font-size: 12px; color: #666; margin: 5px 0;">ID: item_002</p>
-                            <p class="price">¥1,500</p>
-                            <button id="btn-cart-2" class="btn btn-cart">カートに入れる</button>
-                            <a href="thanks.html"><button id="btn-buy-2" class="btn btn-buy">すぐに購入する</button></a>
-                        </div>
-
-                    </div>
+                    <div class="product-grid" id="product-grid"></div>
+                    <p style="font-size:12px;color:#666;margin:16px 0 0;">
+                        ※「カートに入れる」→ カートページ → ご注文手続き → 購入完了 の流れで購入できます。<br>
+                        ※カートに商品を入れたまま離脱すると、カートはこのブラウザに保持されます（カゴ落ち状態の再現）。
+                    </p>
                 </section>
 
             </div>
@@ -224,43 +190,58 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             });
         })();
 
-        // --- KARTEイベント発火用のダミーJS ---
+        // --- 商品一覧・カート投入 ---
+        (function () {
+            var S = window.DemoStore;
+            var grid = document.getElementById('product-grid');
+            var list = Object.keys(S.products).map(function (k) { return S.products[k]; });
 
-        // 商品1のイベント
-        document.getElementById('btn-cart-1').addEventListener('click', function() {
-            alert('【商品1】カートに追加しました。\n※ここで cart イベントが発火します。');
-            /* KARTE実装例
-            tracker.track("cart", { status: true, items: [{ item_id: "item_001", name: "KARTEテスト用 ロゴTシャツ", price: 3000, quantity: 1 }] });
-            */
-        });
+            grid.innerHTML = list.map(function (p, i) {
+                var n = i + 1;
+                return '<div class="product-card" id="' + p.item_id + '">' +
+                    S.thumb(p, 150) +
+                    '<h3>' + S.esc(p.name) + '</h3>' +
+                    '<p class="pid">ID: ' + p.item_id + '</p>' +
+                    '<p class="price">' + S.yen(p.price) + ' <small>(税込)</small></p>' +
+                    '<label class="qty-select">数量 <select id="qty-' + n + '">' +
+                        [1,2,3,4,5].map(function (q) { return '<option>' + q + '</option>'; }).join('') +
+                    '</select></label>' +
+                    '<div class="actions">' +
+                    '<button id="btn-cart-' + n + '" class="btn btn-cart" data-item="' + p.item_id + '" data-n="' + n + '">カートに入れる</button>' +
+                    '<button id="btn-buy-' + n + '" class="btn btn-buy" data-item="' + p.item_id + '" data-n="' + n + '">すぐに購入する</button>' +
+                    '</div></div>';
+            }).join('');
 
-        document.getElementById('btn-buy-1').addEventListener('click', function() {
-            /* KARTE実装例
-            tracker.track("buy", { transaction_id: "trx_" + Math.floor(Math.random()*10000), revenue: 3000, items: [{ item_id: "item_001", name: "KARTEテスト用 ロゴTシャツ", price: 3000, quantity: 1 }] });
-            */
-        });
+            // GA4: 商品一覧の表示
+            S.ga4('view_item_list', {
+                item_list_id: 'recommend', item_list_name: 'おすすめ商品',
+                items: list.map(function (p, i) { var it = S.ga4Item(p, 1); it.index = i; return it; })
+            });
 
-        // 商品2のイベント
-        document.getElementById('btn-cart-2').addEventListener('click', function() {
-            alert('【商品2】カートに追加しました。\n※ここで cart イベントが発火します。');
-        });
+            grid.addEventListener('click', function (e) {
+                var btn = e.target.closest('button[data-item]');
+                if (!btn) return;
+                var id = btn.getAttribute('data-item');
+                var qty = parseInt(document.getElementById('qty-' + btn.getAttribute('data-n')).value, 10) || 1;
+                var p = S.products[id];
 
-        document.getElementById('btn-buy-2').addEventListener('click', function() {
-            // KARTEへの送信処理
-            try {
-                krt("send", "purchase_btn_2", {
-                    "item_id": 2, // ※文字列の "item_002" としたい場合は "" で囲んでください
-                    "name": "KARTEテスト用 トートバッグ",
-                    "price": 1500
-                });
-            } catch (e) {
-                if ("krt" in window) {
-                    krt("send", "_error", { message: e.message });
+                if (btn.classList.contains('btn-cart')) {
+                    // カートに追加（KARTE cart / GA4 add_to_cart を送信）
+                    S.add(id, qty);
+                    S.toast('「' + S.esc(p.name) + '」を' + qty + '点カートに追加しました<a href="cart.html">カートを見る →</a>');
                 } else {
-                    console.warn("tracker was not loaded");
+                    // すぐに購入：カートに追加してご注文手続きへ直行
+                    if (id === 'item_002') {
+                        // 既存のKARTEカスタムイベント（互換のため残しています）
+                        S.krtSend('purchase_btn_2', { item_id: 2, name: p.name, price: p.price });
+                    }
+                    S.add(id, qty);
+                    btn.disabled = true;
+                    btn.textContent = '手続きへ移動中…';
+                    setTimeout(function () { location.href = 'checkout.html'; }, 600);
                 }
-            }
-        });
+            });
+        })();
     </script>
 
 </body>
