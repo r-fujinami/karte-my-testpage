@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ご注文手続き - KARTE検証用デモストア</title>
+
+<!-- GA4検証用：user_id を dataLayer に積む（GTMより前に読み込むこと） -->
+<script src="ga4-user.js"></script>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PQPZ5QKH');</script>
+<!-- End Google Tag Manager -->
+
+<!-- カート管理・KARTE/GA4イベント送信 -->
+<script src="store.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .form-row { margin-bottom: 14px; }
+        .form-row label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 4px; }
+        .form-row input, .form-row select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .pay-option { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; cursor: pointer; font-size: 14px; }
+        .pay-option:has(input:checked) { border-color: #ffa41c; background: #fffaf0; }
+        .pay-option small { color: #888; margin-left: auto; font-size: 12px; }
+        .mini-line { display: flex; gap: 10px; align-items: center; font-size: 13px; margin-bottom: 10px; }
+        .mini-line .n { flex: 1; }
+        .dummy-note { font-size: 12px; color: #8a5300; background: #fef7e0; padding: 8px 10px; border-radius: 4px; margin: 0 0 16px; }
+    </style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQPZ5QKH"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+    <header>
+        <h1><a href="index.html">デモストア</a></h1>
+        <div class="header-right">
+            <span class="test-badge">※KARTE検証用テストページ</span>
+            <a class="cart-link" href="cart.html" id="header-cart">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+                カート <span class="cart-count" data-cart-count style="display:none">0</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <ol class="steps">
+            <li class="done">カート</li>
+            <li class="current">ご注文手続き</li>
+            <li>注文完了</li>
+        </ol>
+
+        <form id="checkout-form" class="layout-wrapper" autocomplete="off">
+            <div class="main-content">
+                <section>
+                    <h2>お届け先</h2>
+                    <p class="dummy-note">テスト用のダミー情報が入力済みです。実在の個人情報は入力しないでください。</p>
+                    <div class="form-row"><label for="f-name">お名前</label><input id="f-name" value="検証 太郎" required></div>
+                    <div class="form-2col">
+                        <div class="form-row"><label for="f-zip">郵便番号</label><input id="f-zip" value="000-0000" required></div>
+                        <div class="form-row"><label for="f-pref">都道府県</label>
+                            <select id="f-pref"><option>東京都</option><option>大阪府</option><option>北海道</option><option>福岡県</option></select></div>
+                    </div>
+                    <div class="form-row"><label for="f-addr">住所</label><input id="f-addr" value="テスト区サンプル町1-2-3" required></div>
+                    <div class="form-row"><label for="f-tel">電話番号</label><input id="f-tel" value="000-0000-0000" required></div>
+                </section>
+
+                <section>
+                    <h2>お支払い方法</h2>
+                    <label class="pay-option"><input type="radio" name="pay" value="credit_card" checked> クレジットカード（ダミー）<small>実際の決済は行われません</small></label>
+                    <label class="pay-option"><input type="radio" name="pay" value="cod"> 代金引換</label>
+                    <label class="pay-option"><input type="radio" name="pay" value="convenience_store"> コンビニ払い</label>
+                </section>
+            </div>
+
+            <div class="sidebar">
+                <div class="summary-box" id="order-summary"></div>
+                <p style="margin-top:12px;"><a href="cart.html" style="font-size:13px;">← カートに戻る</a></p>
+            </div>
+        </form>
+    </div>
+
+    <footer>
+        &copy; 202X KARTE Verification Dummy Site. All rights reserved.
+    </footer>
+
+    <script>
+        (function () {
+            var S = window.DemoStore;
+            var s = S.summary();
+
+            // カートが空なら手続きできない
+            if (!s.items.length) { location.replace('cart.html'); return; }
+
+            document.getElementById('order-summary').innerHTML = '<h3>ご注文内容</h3>' +
+                s.items.map(function (i) {
+                    return '<div class="mini-line">' + S.thumb(S.products[i.item_id], 40) +
+                        '<span class="n">' + S.esc(i.name) + '<br><span style="color:#888">× ' + i.quantity + '</span></span>' +
+                        '<b>' + S.yen(i.price * i.quantity) + '</b></div>';
+                }).join('') +
+                '<div class="summary-row" style="margin-top:14px;"><span>商品小計</span><span>' + S.yen(s.subtotal) + '</span></div>' +
+                '<div class="summary-row"><span>送料</span><span>' + (s.shipping ? S.yen(s.shipping) : '無料') + '</span></div>' +
+                '<div class="summary-row total"><span>お支払い合計</span><span>' + S.yen(s.total) + '</span></div>' +
+                '<button type="submit" id="btn-order" class="btn btn-buy" style="margin-top:14px;font-size:16px;padding:14px;">注文を確定する</button>';
+
+            // ページ表示時：カートの最新状態＋購入手続き開始を送信
+            S.sendCart();
+            S.ga4('begin_checkout', { currency: 'JPY', value: s.subtotal, items: S.ga4Items(s.items) });
+
+            document.getElementById('checkout-form').addEventListener('submit', function (e) {
+                e.preventDefault();
+                var pay = document.querySelector('input[name="pay"]:checked').value;
+                var items = S.ga4Items(s.items);
+                S.ga4('add_shipping_info', { currency: 'JPY', value: s.subtotal, shipping_tier: 'standard', items: items });
+                S.ga4('add_payment_info', { currency: 'JPY', value: s.subtotal, payment_type: pay, items: items });
+
+                var order = S.placeOrder({ payment: pay, name: document.getElementById('f-name').value });
+                var btn = document.getElementById('btn-order');
+                btn.disabled = true;
+                btn.textContent = '注文処理中…';
+                setTimeout(function () { location.href = 'thanks.html?order=' + encodeURIComponent(order.transaction_id); }, 800);
+            });
+        })();
+    </script>
+</body>
+</html>
