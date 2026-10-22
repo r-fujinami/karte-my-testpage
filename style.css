@@ -1,0 +1,78 @@
+/* デモストア共通スタイル */
+body { margin: 0; padding: 0; font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; background-color: #f4f5f7; color: #333; }
+.container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+a { color: #1a73e8; }
+
+/* ヘッダー */
+header { background-color: #fff; padding: 16px 20px; border-bottom: 2px solid #ddd; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+header h1 { margin: 0; font-size: 24px; }
+header h1 a { color: inherit; text-decoration: none; }
+.header-right { display: flex; align-items: center; gap: 16px; }
+.test-badge { background-color: #e60012; color: #fff; padding: 5px 10px; font-size: 12px; font-weight: bold; border-radius: 4px; }
+.cart-link { position: relative; display: inline-flex; align-items: center; gap: 6px; color: #111; text-decoration: none; font-weight: bold; font-size: 14px; padding: 8px 12px; border: 1px solid #ddd; border-radius: 20px; background: #fff; }
+.cart-link:hover { background: #f7f7f7; }
+.cart-link svg { width: 20px; height: 20px; }
+.cart-count { background: #e60012; color: #fff; font-size: 11px; min-width: 18px; height: 18px; line-height: 18px; text-align: center; border-radius: 9px; padding: 0 4px; box-sizing: border-box; }
+
+/* 購入ステップ表示 */
+.steps { display: flex; list-style: none; padding: 0; margin: 0 0 20px; counter-reset: step; }
+.steps li { flex: 1; text-align: center; font-size: 13px; color: #999; position: relative; padding-top: 34px; }
+.steps li::before { counter-increment: step; content: counter(step); position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 26px; height: 26px; line-height: 26px; border-radius: 50%; background: #ddd; color: #fff; font-weight: bold; z-index: 1; }
+.steps li::after { content: ""; position: absolute; top: 12px; left: -50%; width: 100%; height: 2px; background: #ddd; }
+.steps li:first-child::after { display: none; }
+.steps li.done, .steps li.current { color: #111; }
+.steps li.done::before, .steps li.current::before { background: #ffa41c; }
+.steps li.done::after, .steps li.current::after { background: #ffa41c; }
+.steps li.current { font-weight: bold; }
+
+/* レイアウト */
+.layout-wrapper { display: flex; gap: 30px; margin-top: 20px; flex-wrap: wrap; }
+.main-content { flex: 1; min-width: 0; }
+.sidebar { width: 300px; }
+@media (max-width: 760px) { .sidebar { width: 100%; } }
+
+/* セクション共通 */
+section { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+section h2 { margin-top: 0; font-size: 18px; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+
+/* ボタン */
+.btn { display: inline-block; text-align: center; text-decoration: none; padding: 12px; cursor: pointer; border: none; border-radius: 4px; font-size: 14px; width: 100%; font-weight: bold; box-sizing: border-box; margin-bottom: 10px; color: #111; }
+.btn-cart { background-color: #ffd814; }
+.btn-cart:hover { background-color: #f7ca00; }
+.btn-buy { background-color: #ffa41c; }
+.btn-buy:hover { background-color: #fa8900; }
+.btn-sub { background: #fff; border: 1px solid #ccc; }
+.btn-sub:hover { background: #f5f5f5; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* 広告バナー（ダミー） */
+.banner { display: flex; align-items: center; justify-content: center; font-weight: bold; color: #666; border: 2px dashed #bbb; background-color: #eef1f5; text-align: center; margin-bottom: 20px; }
+.banner-hero { width: 100%; height: 150px; background-color: #ffe8e8; border-color: #ffb3b3; margin-top: 20px; }
+.banner-square { width: 100%; height: 250px; background-color: #e8f4ff; border-color: #b3d9ff; }
+.banner-skyscraper { width: 100%; height: 500px; background-color: #e8ffe8; border-color: #b3ffb3; }
+
+/* 金額まとめ */
+.summary-box { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.summary-box h3 { margin: 0 0 14px; font-size: 16px; }
+.summary-row { display: flex; justify-content: space-between; font-size: 14px; margin: 8px 0; }
+.summary-row.total { border-top: 1px solid #eee; padding-top: 12px; margin-top: 12px; font-size: 18px; font-weight: bold; }
+.summary-row.total span:last-child { color: #b12704; }
+.ship-note { font-size: 12px; color: #137333; background: #e6f4ea; padding: 8px 10px; border-radius: 4px; margin: 10px 0 14px; }
+.ship-note.need { color: #8a5300; background: #fef7e0; }
+
+/* カート行 */
+.cart-line { display: flex; gap: 16px; align-items: center; padding: 16px 0; border-bottom: 1px solid #eee; }
+.cart-line:last-child { border-bottom: none; }
+.cart-line .info { flex: 1; min-width: 0; }
+.cart-line .name { font-weight: bold; font-size: 15px; margin: 0 0 4px; }
+.cart-line .meta { font-size: 12px; color: #888; margin: 0; }
+.cart-line .line-price { font-weight: bold; color: #b12704; min-width: 80px; text-align: right; }
+.qty { display: inline-flex; align-items: center; border: 1px solid #ccc; border-radius: 4px; overflow: hidden; margin-top: 8px; }
+.qty button { width: 30px; height: 30px; border: none; background: #f5f5f5; cursor: pointer; font-size: 16px; }
+.qty span { width: 36px; text-align: center; font-size: 14px; }
+.link-btn { background: none; border: none; color: #1a73e8; cursor: pointer; font-size: 12px; margin-left: 12px; padding: 0; }
+
+.empty { text-align: center; padding: 40px 10px; color: #666; }
+
+/* フッター */
+footer { text-align: center; padding: 20px; color: #777; font-size: 12px; margin-top: 40px; }
