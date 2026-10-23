@@ -23,6 +23,8 @@
     item_003: { item_id: 'item_003', name: 'KARTEテスト用 マグカップ', price: 1200, category: '雑貨', brand: 'DEMO', color: '#588157', icon: 'M' },
     item_004: { item_id: 'item_004', name: 'KARTEテスト用 キャップ', price: 2500, category: 'アパレル', brand: 'DEMO', color: '#6d597a', icon: 'C' }
   };
+  var AFFILIATION = 'KARTE検証用デモストア';
+  var TAX_RATE = 0.10; // 価格はすべて税込（内税）
   var FREE_SHIPPING_THRESHOLD = 5000;
   var SHIPPING_FEE = 500;
 
@@ -131,10 +133,15 @@
   function pluck(arr, k) { return arr.map(function (x) { return x[k]; }); }
 
   // ---------------- GA4 (dataLayer) ----------------
-  function ga4Item(p, qty) {
-    return { item_id: p.item_id, item_name: p.name, item_brand: p.brand, item_category: p.category, price: p.price, quantity: qty };
+  // GA4 推奨パラメータ: item_id / item_name（どちらか必須）, affiliation, index, item_brand, item_category, price, quantity
+  function ga4Item(p, qty, index) {
+    var it = { item_id: p.item_id, item_name: p.name, affiliation: AFFILIATION, item_brand: p.brand, item_category: p.category, price: p.price, quantity: qty };
+    if (typeof index === 'number') it.index = index;
+    return it;
   }
-  function ga4Items(items) { return items.map(function (i) { return ga4Item(PRODUCTS[i.item_id], i.quantity); }); }
+  function ga4Items(items) { return items.map(function (i, n) { return ga4Item(PRODUCTS[i.item_id], i.quantity, n); }); }
+  // 税込価格に含まれる消費税額（内税）
+  function taxOf(amount) { return Math.floor(amount * TAX_RATE / (1 + TAX_RATE)); }
 
   function ga4(event, ecommerce) {
     w.dataLayer = w.dataLayer || [];
@@ -169,8 +176,17 @@
       items: o.items, item_ids: pluck(o.items, 'item_id'), item_names: pluck(o.items, 'name'),
       item_prices: pluck(o.items, 'price'), item_quantities: pluck(o.items, 'quantity')
     });
+    // 公式リファレンスの purchase パラメータ
+    //   必須: transaction_id, value(数値), currency(value と必ずセット), items
+    //   推奨: tax, shipping, affiliation, coupon（クーポン機能はないため未送信）
+    //   value は商品小計（送料を含まない・税込）
     ga4('purchase', {
-      transaction_id: o.transaction_id, value: o.subtotal, shipping: o.shipping, currency: 'JPY',
+      transaction_id: String(o.transaction_id),
+      affiliation: AFFILIATION,
+      value: Number(o.subtotal),
+      tax: taxOf(o.subtotal),
+      shipping: Number(o.shipping),
+      currency: 'JPY',
       items: ga4Items(o.items)
     });
     clearCart();
