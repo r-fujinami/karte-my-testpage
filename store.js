@@ -152,9 +152,20 @@
 
   // gtag コマンドで GA4 に直接送信（GTM のトリガー設定なしで送れる）
   // GTM で配信している Google タグが dataLayer 上の gtag コマンドを読み取って送信する
+  // ※GTM 経由の Google タグでは send_to（測定ID）を指定しないと送信されない
+  var GA4_MEASUREMENT_ID = 'G-K5XV9GYH20';
   function gtag() {
     w.dataLayer = w.dataLayer || [];
     w.dataLayer.push(arguments); // 配列ではなく arguments をそのまま積む（gtag の仕様）
+  }
+  // GTM が Google タグ（測定ID）を読み込み終えてから送る（最大10秒待つ）
+  function whenGoogleTagReady(fn) {
+    var tries = 0;
+    (function check() {
+      if (w.google_tag_manager && w.google_tag_manager[GA4_MEASUREMENT_ID]) return fn();
+      if (++tries > 100) return; // 広告ブロッカー等で読み込めない場合は諦める
+      setTimeout(check, 100);
+    })();
   }
 
   // ---------------- 注文 ----------------
@@ -199,7 +210,9 @@
     ga4('purchase', purchaseParams);
     // GTM にトリガーを作らずに GA4 へ送る。
     // ※GTM 側に purchase のカスタムイベントトリガーを追加した場合は二重計上になるので、この行を削除すること
-    gtag('event', 'purchase', purchaseParams);
+    var gtagParams = JSON.parse(JSON.stringify(purchaseParams));
+    gtagParams.send_to = GA4_MEASUREMENT_ID;
+    whenGoogleTagReady(function () { gtag('event', 'purchase', gtagParams); });
     clearCart();
     sendCart(); // 空カート（status:false）→ カゴ落ち対象から外れる
     o.sent = true;
